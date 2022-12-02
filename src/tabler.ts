@@ -276,6 +276,7 @@ export class Tabler {
 
 	public rowsExist = (ids: Array<string | number>) => {
 		const notPresent : Array<string | number> = [];
+		console.log(this);
 		const query = this.wrapper.db.prepare(`SELECT ${this.idField} FROM ${this.tableDefinition.name} WHERE ${this.idField}=?`);
 		ids.forEach((id) => {
 			const row = query.get(id);

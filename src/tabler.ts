@@ -48,6 +48,16 @@ export class Tabler {
 			const create = wrapper.db.prepare(createStr);
 			create.run();
 			this.operationLog(`Created table ${this.tableDefinition.name} (${Date.now() - start}ms)`)
+		} else {
+			this.fieldKeys.some((key) => {
+				if (this.tableDefinition.fields[key].primaryKey) {
+					this._idField = key;
+					return true;
+				}
+			});
+			if (!this.idField) {
+				throw 'No primary key specified';
+			}
 		}
 	}
 
@@ -213,7 +223,7 @@ export class Tabler {
 				return out;
 			}, {});
 			if (Object.keys(row).length) {
-				console.log(`Extra fields present - ${Object.keys(row).join(',')}`);
+				//console.log(`Extra fields present - ${Object.keys(row).join(',')}`);
 			};
 			return out;
 		})

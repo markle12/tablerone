@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import fs from 'fs';
 import { Tabler } from "./tabler";
-import { TableRowDefinition, Unique } from "./types";
+import { Table } from "./types";
 
 export class dbWrapper {
 	public db: Database.Database;
@@ -37,12 +37,12 @@ export class dbWrapper {
 		}
     }
 
-	public addTable(name: string, def: TableRowDefinition, uniques?: Array<Unique>) {
-		if (this._tables[name]) {
+	public addTable(def: Table) {
+		if (this._tables[def.name]) {
 			throw 'Table already added';
 		}
-		const table = new Tabler(this, def, name, uniques);
-		this._tables[name] = table;
+		const table = new Tabler(this, def.fields, def.name, def.uniques);
+		this._tables[def.name] = table;
 	}
 
 	get tables() {

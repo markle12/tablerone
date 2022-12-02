@@ -16,7 +16,7 @@ export class Tabler {
 		
 
 		this.fieldKeys = Object.keys(def);
-		if (!this.tableExists) {
+		if (!this.tableExists()) {
 			this.operationLog(`Table ${this.tableDefinition.name} not found, creating`);
 			let createStr = `CREATE TABLE ${this.tableDefinition.name} (`;
 			this.fieldKeys.forEach((key, i) => {

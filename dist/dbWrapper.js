@@ -29,12 +29,12 @@ export class dbWrapper {
             }, interval);
         }
     }
-    addTable(name, def, uniques) {
-        if (this._tables[name]) {
+    addTable(def) {
+        if (this._tables[def.name]) {
             throw 'Table already added';
         }
-        const table = new Tabler(this, def, name, uniques);
-        this._tables[name] = table;
+        const table = new Tabler(this, def.fields, def.name, def.uniques);
+        this._tables[def.name] = table;
     }
     get tables() {
         return Object.assign({}, this._tables);

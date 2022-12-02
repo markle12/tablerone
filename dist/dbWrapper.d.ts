@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 import { Tabler } from "./tabler";
-import { TableRowDefinition, Unique } from "./types";
+import { Table } from "./types";
 export declare class dbWrapper {
     private dbFile;
     db: Database.Database;
@@ -12,7 +12,7 @@ export declare class dbWrapper {
         queryLog?: (val: string) => void;
         operationLog?: (val: string) => void;
     });
-    addTable(name: string, def: TableRowDefinition, uniques?: Array<Unique>): void;
+    addTable(def: Table): void;
     get tables(): {
         [x: string]: Tabler;
     };

@@ -18,6 +18,7 @@ class Tabler {
         };
         this.select = (options) => {
             var _a, _b, _c, _d;
+            const start = Date.now();
             let str = `SELECT %%FIELDS%% FROM ${this.tableDefinition.name}`;
             if ((_a = options.joins) === null || _a === void 0 ? void 0 : _a.length) {
                 options.joins.forEach((join) => {
@@ -64,6 +65,7 @@ class Tabler {
             const fullStr = str.replace('%%FIELDS%%', Array.isArray(options.fields) ? options.fields.join(', ') : options.fields) + limitOffset;
             const query = this.wrapper.db.prepare(fullStr);
             let result = query.all(queryArgs);
+            const queryRun = Date.now();
             result = result.map((row) => {
                 var _a;
                 (_a = options.subRows) === null || _a === void 0 ? void 0 : _a.forEach((subRowType) => {
@@ -100,6 +102,8 @@ class Tabler {
                 const count = countQuery.all(queryArgs).length;
                 return { list: result, totalResults: count };
             }
+            const fullrun = Date.now();
+            this.operationLog(`${this.def.name} SELECT: ${fullrun - start}ms, ${queryRun - start}ms without post-process`);
             return { list: result };
         };
         this.query = (fields) => {
@@ -120,6 +124,7 @@ class Tabler {
             return statement.get(id);
         };
         this.insert = (data) => {
+            const start = Date.now();
             if (!Array.isArray(data)) {
                 data = [data];
             }
@@ -165,7 +170,8 @@ class Tabler {
                     insertStatement.run(insert);
                 });
             });
-            return transaction(insertRows);
+            transaction(insertRows);
+            this.operationLog(`${this.tableDefinition} INSERT ${data.length} rows - ${Date.now() - start}ms`);
         };
         this.delete = (id) => {
             const ids = Array.isArray(id) ? id : [id];
@@ -229,6 +235,7 @@ class Tabler {
         this.fieldKeys = Object.keys(def);
         if (!this.tableExists()) {
             this.operationLog(`Table ${this.tableDefinition.name} not found, creating`);
+            const start = Date.now();
             let createStr = `CREATE TABLE ${this.tableDefinition.name} (`;
             this.fieldKeys.forEach((key, i) => {
                 const field = this.tableDefinition.fields[key];
@@ -256,6 +263,7 @@ class Tabler {
             }
             const create = wrapper.db.prepare(createStr);
             create.run();
+            this.operationLog(`Created table ${this.tableDefinition.name} (${Date.now() - start}ms)`);
         }
     }
     operationLog(val) {

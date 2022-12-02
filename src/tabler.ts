@@ -18,6 +18,7 @@ export class Tabler {
 		this.fieldKeys = Object.keys(def);
 		if (!this.tableExists()) {
 			this.operationLog(`Table ${this.tableDefinition.name} not found, creating`);
+			const start = Date.now();
 			let createStr = `CREATE TABLE ${this.tableDefinition.name} (`;
 			this.fieldKeys.forEach((key, i) => {
 				const field = this.tableDefinition.fields[key];
@@ -46,6 +47,7 @@ export class Tabler {
 			
 			const create = wrapper.db.prepare(createStr);
 			create.run();
+			this.operationLog(`Created table ${this.tableDefinition.name} (${Date.now() - start}ms)`)
 		}
 	}
 
@@ -70,7 +72,7 @@ export class Tabler {
 	}
 
 	public select = (options: QueryOptions) => {
-		
+		const start = Date.now();
 		let str = `SELECT %%FIELDS%% FROM ${this.tableDefinition.name}`;
 		if (options.joins?.length) {
 			options.joins.forEach((join) => {
@@ -121,7 +123,7 @@ export class Tabler {
 		const fullStr = str.replace('%%FIELDS%%', Array.isArray(options.fields) ? options.fields.join(', ') : options.fields) + limitOffset;
 		const query =this.wrapper.db.prepare(fullStr);
 		let result = query.all(queryArgs);
-		
+		const queryRun = Date.now();
 		result = result.map((row) => {
 			options.subRows?.forEach((subRowType) => {
 				const stringVal : string = row[subRowType.name];
@@ -157,6 +159,8 @@ export class Tabler {
 			const count = countQuery.all(queryArgs).length;
 			return {list: result, totalResults: count};
 		}
+		const fullrun = Date.now();
+		this.operationLog(`${this.def.name} SELECT: ${fullrun - start}ms, ${queryRun - start}ms without post-process`);
 		return {list: result};
 	}
 
@@ -179,6 +183,7 @@ export class Tabler {
 	}
 
 	public insert = (data: Array<TableRow>) => {
+		const start = Date.now();
 		if (!Array.isArray(data)) {
 			data = [data];
 		}
@@ -219,7 +224,8 @@ export class Tabler {
 				insertStatement.run(insert);
 			});
 		});
-		return transaction(insertRows);
+		transaction(insertRows);
+		this.operationLog(`${this.tableDefinition} INSERT ${data.length} rows - ${Date.now()-start}ms`);
 	}
 
 	public delete = (id: string | number | Array<string | number>) => {

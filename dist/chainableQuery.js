@@ -1,8 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChainableQuery = void 0;
 ;
 const group_concat = (fields) => {
     return `GROUP_CONCAT(${fields.join(`||'[vs]'||`)},'[rs]')`;
 };
-export const ChainableQuery = (existingOptions, runAction, homeTable) => {
+const ChainableQuery = (existingOptions, runAction, homeTable) => {
     return {
         filter: (filter) => {
             if (filter) {
@@ -12,7 +15,7 @@ export const ChainableQuery = (existingOptions, runAction, homeTable) => {
                 const filters = Array.isArray(filter) ? filter : [filter];
                 filters.length && existingOptions.filters.push(...filters);
             }
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         join: (join) => {
             if (join) {
@@ -22,7 +25,7 @@ export const ChainableQuery = (existingOptions, runAction, homeTable) => {
                 const joins = Array.isArray(join) ? join : [join];
                 joins.length && existingOptions.joins.push(...joins);
             }
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         orderBy: (order) => {
             if (order) {
@@ -32,14 +35,14 @@ export const ChainableQuery = (existingOptions, runAction, homeTable) => {
                 const orders = Array.isArray(order) ? order : [order];
                 orders.length && existingOptions.orders.push(...orders);
             }
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         select: (field) => {
             const fields = Array.isArray(field) ? field : [field];
             if (Array.isArray(existingOptions.fields)) {
                 fields.length && existingOptions.fields.push(...fields);
             }
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         limit: (limit) => {
             if (limit) {
@@ -48,7 +51,7 @@ export const ChainableQuery = (existingOptions, runAction, homeTable) => {
                 }
                 existingOptions.limit = limit;
             }
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         offset: (offset) => {
             if (offset) {
@@ -57,7 +60,7 @@ export const ChainableQuery = (existingOptions, runAction, homeTable) => {
                 }
                 existingOptions.offset = offset;
             }
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         groupBy: (groupBy) => {
             if (!Array.isArray(existingOptions.groupBy)) {
@@ -65,7 +68,7 @@ export const ChainableQuery = (existingOptions, runAction, homeTable) => {
             }
             const groupBys = Array.isArray(groupBy) ? groupBy : [groupBy];
             groupBys.length && existingOptions.groupBy.push(...groupBys);
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         subTable: (table, select, join) => {
             const fields = select.map(field => `${table.name}.${field}`);
@@ -86,14 +89,15 @@ export const ChainableQuery = (existingOptions, runAction, homeTable) => {
             if (!existingOptions.groupBy.includes(groupBy)) {
                 existingOptions.groupBy.push(groupBy);
             }
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         includeCount: (includeCount) => {
             existingOptions.includeCount = includeCount;
-            return ChainableQuery(existingOptions, runAction, homeTable);
+            return (0, exports.ChainableQuery)(existingOptions, runAction, homeTable);
         },
         run: () => {
             return runAction(existingOptions);
         }
     };
 };
+exports.ChainableQuery = ChainableQuery;

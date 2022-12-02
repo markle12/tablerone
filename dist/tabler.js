@@ -1,6 +1,9 @@
-import { operator } from './types';
-import { ChainableQuery } from "./chainableQuery";
-export class Tabler {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Tabler = void 0;
+const types_1 = require("./types");
+const chainableQuery_1 = require("./chainableQuery");
+class Tabler {
     constructor(wrapper, def, name, uniques) {
         var _a;
         this.wrapper = wrapper;
@@ -34,10 +37,10 @@ export class Tabler {
                         }
                         queryArgs[argName] = filter.value;
                     }
-                    if (filter.operator == operator.ISNULL) {
+                    if (filter.operator == types_1.operator.ISNULL) {
                         return `${filter.field} IS NULL`;
                     }
-                    else if (filter.operator == operator.ISNOTNULL) {
+                    else if (filter.operator == types_1.operator.ISNOTNULL) {
                         return `${filter.field} IS NOT NULL`;
                     }
                     else {
@@ -108,7 +111,7 @@ export class Tabler {
             }
             fields = fields.map(field => `${this.tableDefinition.name}.${field}`);
             const options = { fields };
-            return ChainableQuery(options, (options) => {
+            return (0, chainableQuery_1.ChainableQuery)(options, (options) => {
                 return this.select(options);
             }, this);
         };
@@ -265,4 +268,5 @@ export class Tabler {
         return this._idField;
     }
 }
-export default Tabler;
+exports.Tabler = Tabler;
+exports.default = Tabler;

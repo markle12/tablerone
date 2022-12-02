@@ -11,6 +11,9 @@
 	  "strict": true, 
 	  "skipLibCheck": true,                                 
 	  "declaration": true
+	},
+	"ts-node": {
+		"esm": true
 	}
   }
   

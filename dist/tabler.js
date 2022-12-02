@@ -218,6 +218,7 @@ class Tabler {
         };
         this.rowsExist = (ids) => {
             const notPresent = [];
+            console.log(this);
             const query = this.wrapper.db.prepare(`SELECT ${this.idField} FROM ${this.tableDefinition.name} WHERE ${this.idField}=?`);
             ids.forEach((id) => {
                 const row = query.get(id);

@@ -114,7 +114,7 @@ class Tabler {
             fields = fields.map(field => `${this.tableDefinition.name}.${field}`);
             const options = { fields };
             return (0, chainableQuery_1.ChainableQuery)(options, (options) => {
-                return this.select(options);
+                return this.wrapper.tables[this.def.name].select(options);
             }, this);
         };
         this.getById = (id) => {

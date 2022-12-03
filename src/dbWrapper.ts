@@ -60,6 +60,7 @@ export class dbWrapper {
 						let logData : any = {table: target.def.name, operation: prop, params: args, startTime};
 						try {
 							const results = (targetVal as any).apply(target, args);
+							console.log('results!', results);
 							if (results.logData) {
 								logData = {...logData, ...results.logData};
 							}

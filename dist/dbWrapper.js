@@ -57,6 +57,7 @@ class dbWrapper {
                         let logData = { table: target.def.name, operation: prop, params: args, startTime };
                         try {
                             const results = targetVal.apply(target, args);
+                            console.log('results!', results);
                             if (results.logData) {
                                 logData = Object.assign(Object.assign({}, logData), results.logData);
                             }

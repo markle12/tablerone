@@ -54,7 +54,7 @@ export class dbWrapper {
 		const proxyHandler = {
 			get(target: Tabler, prop: keyof Tabler, receiver: any) {
 				const targetVal = target[prop];
-				if (targetVal != 'query' && targetVal instanceof Function) {
+				if (prop != 'query' && targetVal instanceof Function) {
 					return function(...args: Array<any>) {
 						const startTime = Date.now();
 						let logData : any = {table: target.def.name, operation: prop, params: args, startTime};

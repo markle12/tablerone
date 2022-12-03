@@ -7,8 +7,8 @@ export class dbWrapper {
 	public db: Database.Database;
     private backupTask: NodeJS.Timer | null = null;
 	private _tables : {[key: string]: Tabler} = {};
-	readonly queryLog: ((val: string) => void) | null;
-	readonly operationLog: ((val: string) => void) | null;
+	readonly queryLog: ((...args: any) => void) | null;
+	readonly operationLog: ((...args: any) => void) | null;
 
 	constructor(private dbFile: string, options?: {queryLog?: (val: string) => void, operationLog?: (val: string) => void}) {
         if (!dbFile) {
@@ -46,8 +46,46 @@ export class dbWrapper {
 	}
 
 	get tables() {
-		return {...this._tables};
-	} 
+		const doLog = (...args: any) => {
+			if (this.operationLog) {
+				this.operationLog(...args);
+			}
+		}
+		const proxyHandler = {
+			get(target: Tabler, prop: keyof Tabler, receiver: any) {
+				const targetVal = target[prop];
+				if (targetVal != 'query' && targetVal instanceof Function) {
+					return function(...args: Array<any>) {
+						const startTime = Date.now();
+						let logData : any = {table: target.def.name, operation: prop, params: args, startTime};
+						try {
+							const results = (targetVal as any).apply(target, args);
+							if (results.logData) {
+								logData = {...logData, ...results.logData};
+							}
+							if (results.out) {
+								logData.success = true;
+								logData.duration = Date.now() - startTime;
+							}
+							doLog(logData);
+							return results.out;
+						} catch (e) {
+							logData.success = false;
+							logData.error = e;
+							logData.duration = Date.now() - startTime;
+							doLog(logData);
+							return null;
+						}
+					}
+				}
+				return targetVal;
+			}
+		}
+		return Object.keys(this._tables).reduce((tables: {[key: string]: Tabler}, tableKey: string) => {
+			tables[tableKey] = new Proxy(this._tables[tableKey], proxyHandler);
+			return tables;
+		}, {});
+	}
 }
 
 export default dbWrapper;

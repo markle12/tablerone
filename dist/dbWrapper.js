@@ -43,7 +43,46 @@ class dbWrapper {
         this._tables[def.name] = table;
     }
     get tables() {
-        return Object.assign({}, this._tables);
+        const doLog = (...args) => {
+            if (this.operationLog) {
+                this.operationLog(...args);
+            }
+        };
+        const proxyHandler = {
+            get(target, prop, receiver) {
+                const targetVal = target[prop];
+                if (targetVal != 'query' && targetVal instanceof Function) {
+                    return function (...args) {
+                        const startTime = Date.now();
+                        let logData = { table: target.def.name, operation: prop, params: args, startTime };
+                        try {
+                            const results = targetVal.apply(target, args);
+                            if (results.logData) {
+                                logData = Object.assign(Object.assign({}, logData), results.logData);
+                            }
+                            if (results.out) {
+                                logData.success = true;
+                                logData.duration = Date.now() - startTime;
+                            }
+                            doLog(logData);
+                            return results.out;
+                        }
+                        catch (e) {
+                            logData.success = false;
+                            logData.error = e;
+                            logData.duration = Date.now() - startTime;
+                            doLog(logData);
+                            return null;
+                        }
+                    };
+                }
+                return targetVal;
+            }
+        };
+        return Object.keys(this._tables).reduce((tables, tableKey) => {
+            tables[tableKey] = new Proxy(this._tables[tableKey], proxyHandler);
+            return tables;
+        }, {});
     }
 }
 exports.dbWrapper = dbWrapper;

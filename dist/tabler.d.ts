@@ -15,8 +15,16 @@ export declare class Tabler {
     select: (options: QueryOptions) => {
         list: any[];
         totalResults: number;
+        out?: undefined;
+        logData?: undefined;
     } | {
-        list: any[];
+        out: {
+            list: any[];
+        };
+        logData: {
+            duration_without_postprocessing: number;
+        };
+        list?: undefined;
         totalResults?: undefined;
     };
     query: (fields: Array<string> | string | '*') => {
@@ -32,8 +40,16 @@ export declare class Tabler {
         run: () => any;
     };
     getById: (id: string | number) => any;
-    insert: (data: Array<TableRow>) => void;
-    delete: (id: string | number | Array<string | number>) => void;
+    insert: (data: Array<TableRow>) => {
+        out: {
+            success: boolean;
+        };
+    };
+    delete: (id: string | number | Array<string | number>) => {
+        out: {
+            success: boolean;
+        };
+    };
     deleteBy: (filters: Array<Filter>) => import("better-sqlite3").RunResult;
     update: (id: string | number | Array<string | number>, set: Partial<TableRow>) => void;
     rowsExist: (ids: Array<string | number>) => (string | number)[];

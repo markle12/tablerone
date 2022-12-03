@@ -50,6 +50,7 @@ class dbWrapper {
         };
         const proxyHandler = {
             get(target, prop, receiver) {
+                console.log('proxy', target.def.name, prop, receiver);
                 const targetVal = target[prop];
                 if (prop != 'query' && targetVal instanceof Function) {
                     return function (...args) {

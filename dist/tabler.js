@@ -100,7 +100,7 @@ class Tabler {
                 const countStr = str.replace('%%FIELDS%%', 'COUNT(1)');
                 const countQuery = this.wrapper.db.prepare(countStr);
                 const count = countQuery.all(queryArgs).length;
-                return { list: result, totalResults: count };
+                return { out: { list: result, totalResults: count }, logData: { duration_without_postprocessing: queryRun - start } };
             }
             return { out: { list: result }, logData: { duration_without_postprocessing: queryRun - start } };
         };

@@ -13,19 +13,21 @@ export declare class Tabler {
     private tableExists;
     private schemaMatchesDefinition;
     select: (options: QueryOptions) => {
-        list: any[];
-        totalResults: number;
-        out?: undefined;
-        logData?: undefined;
-    } | {
         out: {
             list: any[];
+            totalResults: number;
         };
         logData: {
             duration_without_postprocessing: number;
         };
-        list?: undefined;
-        totalResults?: undefined;
+    } | {
+        out: {
+            list: any[];
+            totalResults?: undefined;
+        };
+        logData: {
+            duration_without_postprocessing: number;
+        };
     };
     query: (fields: Array<string> | string | '*') => {
         filter: (filter?: Filter | Filter[] | undefined) => any;

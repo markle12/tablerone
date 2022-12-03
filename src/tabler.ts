@@ -1,7 +1,6 @@
 import { Table, TableRowDefinition, Unique, Filter, TableRow, QueryOptions, operator } from './types';
 import { dbWrapper } from "./dbWrapper";
 import { ChainableQuery } from "./chainableQuery";
-import { timeStamp } from 'console';
 
 export class Tabler {
 	private tableDefinition : Table;
@@ -170,7 +169,7 @@ export class Tabler {
 			const countQuery = this.wrapper.db.prepare(countStr);
 			
 			const count = countQuery.all(queryArgs).length;
-			return {list: result, totalResults: count};
+			return {out: {list: result, totalResults: count}, logData: {duration_without_postprocessing: queryRun - start}};
 		}
 		return {out: { list: result}, logData: {duration_without_postprocessing: queryRun - start}};
 	}

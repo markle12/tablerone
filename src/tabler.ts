@@ -190,7 +190,7 @@ export class Tabler {
 
 	public getById = (id: string | number) => {
 		const statement = this.wrapper.db.prepare(`SELECT * from ${this.tableDefinition.name} WHERE ${this.idField}=?`);
-		return statement.get(id);
+		return {out: statement.get(id)};
 	}
 
 	public insert = (data: Array<TableRow>) => {
@@ -258,7 +258,8 @@ export class Tabler {
 			return `${filter.invert ? 'NOT ' : ''}${filter.field}${filter.operator}@${filter.field}`
 		}).join(' AND ');
 		const query = this.wrapper.db.prepare(str);
-		return query.run(queryArgs);
+		const result = query.run(queryArgs);
+		return {out: result};
 	}
 
 	public update = (id: string | number | Array<string | number>, set: Partial<TableRow>) => {
@@ -282,7 +283,8 @@ export class Tabler {
 				statement.run({id, ...set});
 			});
 		});
-		return transaction(ids, set);
+		transaction(ids, set);
+		return {out: {success: true}};
 	}
 
 	public rowsExist = (ids: Array<string | number>) => {
@@ -294,7 +296,7 @@ export class Tabler {
 				notPresent.push(id);
 			}
 		});
-		return notPresent;		
+		return {out: notPresent};
 	}
 }
 

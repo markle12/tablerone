@@ -119,7 +119,7 @@ class Tabler {
         };
         this.getById = (id) => {
             const statement = this.wrapper.db.prepare(`SELECT * from ${this.tableDefinition.name} WHERE ${this.idField}=?`);
-            return statement.get(id);
+            return { out: statement.get(id) };
         };
         this.insert = (data) => {
             if (!Array.isArray(data)) {
@@ -189,7 +189,8 @@ class Tabler {
                 return `${filter.invert ? 'NOT ' : ''}${filter.field}${filter.operator}@${filter.field}`;
             }).join(' AND ');
             const query = this.wrapper.db.prepare(str);
-            return query.run(queryArgs);
+            const result = query.run(queryArgs);
+            return { out: result };
         };
         this.update = (id, set) => {
             let ids = Array.isArray(id) ? id : [id];
@@ -212,7 +213,8 @@ class Tabler {
                     statement.run(Object.assign({ id }, set));
                 });
             });
-            return transaction(ids, set);
+            transaction(ids, set);
+            return { out: { success: true } };
         };
         this.rowsExist = (ids) => {
             const notPresent = [];
@@ -223,7 +225,7 @@ class Tabler {
                     notPresent.push(id);
                 }
             });
-            return notPresent;
+            return { out: notPresent };
         };
         this.tableDefinition = {
             name,

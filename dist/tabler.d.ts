@@ -39,7 +39,9 @@ export declare class Tabler {
         includeCount: (includeCount: boolean) => any;
         run: () => any;
     };
-    getById: (id: string | number) => any;
+    getById: (id: string | number) => {
+        out: any;
+    };
     insert: (data: Array<TableRow>) => {
         out: {
             success: boolean;
@@ -50,8 +52,16 @@ export declare class Tabler {
             success: boolean;
         };
     };
-    deleteBy: (filters: Array<Filter>) => import("better-sqlite3").RunResult;
-    update: (id: string | number | Array<string | number>, set: Partial<TableRow>) => void;
-    rowsExist: (ids: Array<string | number>) => (string | number)[];
+    deleteBy: (filters: Array<Filter>) => {
+        out: import("better-sqlite3").RunResult;
+    };
+    update: (id: string | number | Array<string | number>, set: Partial<TableRow>) => {
+        out: {
+            success: boolean;
+        };
+    };
+    rowsExist: (ids: Array<string | number>) => {
+        out: (string | number)[];
+    };
 }
 export default Tabler;

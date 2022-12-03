@@ -50,14 +50,15 @@ class dbWrapper {
         };
         const proxyHandler = {
             get(target, prop, receiver) {
-                console.log('proxy', target.def.name, prop, receiver);
                 const targetVal = target[prop];
                 if (prop != 'query' && targetVal instanceof Function) {
                     return function (...args) {
+                        console.log('doing proxy');
                         const startTime = Date.now();
                         let logData = { table: target.def.name, operation: prop, params: args, startTime };
+                        console.log('log data', logData);
                         try {
-                            const results = targetVal.apply(receiver, args);
+                            const results = targetVal.apply(target, args); // honestly just shut the fuck up, typescript, you have no idea what you are on about here
                             if (results.logData) {
                                 logData = Object.assign(Object.assign({}, logData), results.logData);
                             }
@@ -66,12 +67,14 @@ class dbWrapper {
                                 logData.duration = Date.now() - startTime;
                             }
                             doLog(logData);
+                            console.log('log data 2', logData);
                             return results.out;
                         }
                         catch (e) {
                             logData.success = false;
                             logData.error = e;
                             logData.duration = Date.now() - startTime;
+                            console.log('failed', logData);
                             doLog(logData);
                             return null;
                         }

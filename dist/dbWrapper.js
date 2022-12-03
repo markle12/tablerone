@@ -55,6 +55,7 @@ class dbWrapper {
                     return function (...args) {
                         const startTime = Date.now();
                         let logData = { table: target.def.name, operation: prop, params: args, startTime };
+                        console.log('proxy', target.def.name, prop);
                         try {
                             const results = targetVal.apply(target, args);
                             console.log('results!', results);

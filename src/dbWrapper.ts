@@ -52,7 +52,7 @@ export class dbWrapper {
 			}
 		}
 		const proxyHandler : ProxyHandler<Tabler> = {
-			get: function(target: Tabler, prop: keyof Tabler, receiver) {
+			get(target: Tabler, prop: keyof Tabler, receiver) {
 				const targetVal = target[prop];
 				if (prop != 'query' && targetVal instanceof Function) {
 					return function(...args: Array<any>) {

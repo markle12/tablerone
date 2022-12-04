@@ -141,6 +141,7 @@ export class Tabler {
 		
 		const fullStr = str.replace('%%FIELDS%%', Array.isArray(options.fields) ? options.fields.join(', ') : options.fields) + limitOffset;
 		console.log(fullStr);
+		console.log(options);
 		const query = this.wrapper.db.prepare(fullStr);
 		let result = query.all(queryArgs);
 		const queryRun = Date.now();

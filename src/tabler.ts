@@ -1,21 +1,14 @@
-import { Table, TableRowDefinition, Unique, Filter, TableRow, QueryOptions, operator } from './types';
+import { Table, Filter, TableRow, QueryOptions, operator } from './types';
 import { dbWrapper } from "./dbWrapper";
 import { ChainableQuery } from "./chainableQuery";
 
 export class Tabler {
-	private tableDefinition : Table;
 	private fieldKeys : Array<string>;
 	private _idField : string | null = null;
 	
-	constructor(private wrapper: dbWrapper, def: TableRowDefinition, name: string, uniques?: Array<Unique>) {
-		this.tableDefinition = {
-			name,
-			fields: def,
-			uniques
-		};
+	constructor(private wrapper: dbWrapper, private tableDefinition: Table) {
 		
-
-		this.fieldKeys = Object.keys(def);
+		this.fieldKeys = Object.keys(this.tableDefinition.fields);
 		if (!this.tableExists()) {
 			const start = Date.now();
 			let createStr = `CREATE TABLE ${this.tableDefinition.name} (`;
@@ -48,6 +41,9 @@ export class Tabler {
 			create.run();
 			let logData : any = {table: this.def.name, operation: 'create_table', params: {createStr}, startTime: start, success: true};
 			this.operationLog(logData);
+			if (this.tableDefinition.onCreate) {
+				this.tableDefinition.onCreate(this);
+			}
 		} else {
 			this.fieldKeys.some((key) => {
 				if (this.tableDefinition.fields[key].primaryKey) {

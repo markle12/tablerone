@@ -4,9 +4,10 @@ exports.Tabler = void 0;
 const types_1 = require("./types");
 const chainableQuery_1 = require("./chainableQuery");
 class Tabler {
-    constructor(wrapper, def, name, uniques) {
+    constructor(wrapper, tableDefinition) {
         var _a;
         this.wrapper = wrapper;
+        this.tableDefinition = tableDefinition;
         this._idField = null;
         this.tableExists = () => {
             const columns = this.wrapper.db.pragma(`main.table_info(${this.tableDefinition.name})`);
@@ -227,12 +228,7 @@ class Tabler {
             });
             return { out: notPresent };
         };
-        this.tableDefinition = {
-            name,
-            fields: def,
-            uniques
-        };
-        this.fieldKeys = Object.keys(def);
+        this.fieldKeys = Object.keys(this.tableDefinition.fields);
         if (!this.tableExists()) {
             const start = Date.now();
             let createStr = `CREATE TABLE ${this.tableDefinition.name} (`;
@@ -264,6 +260,9 @@ class Tabler {
             create.run();
             let logData = { table: this.def.name, operation: 'create_table', params: { createStr }, startTime: start, success: true };
             this.operationLog(logData);
+            if (this.tableDefinition.onCreate) {
+                this.tableDefinition.onCreate(this);
+            }
         }
         else {
             this.fieldKeys.some((key) => {

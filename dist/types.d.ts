@@ -1,3 +1,4 @@
+import Tabler from "./tabler";
 export type Validator<T> = (value: T) => T;
 export declare enum fieldType {
     TEXT = "TEXT",
@@ -34,6 +35,7 @@ export interface Table {
     name: string;
     fields: TableRowDefinition;
     uniques?: Array<Unique>;
+    onCreate?: (table: Tabler) => void;
 }
 export declare enum operator {
     EQUALS = "=",

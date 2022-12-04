@@ -39,7 +39,7 @@ class dbWrapper {
         if (this._tables[def.name]) {
             throw 'Table already added';
         }
-        const table = new tabler_1.Tabler(this, def.fields, def.name, def.uniques);
+        const table = new tabler_1.Tabler(this, def);
         this._tables[def.name] = table;
     }
     get tables() {

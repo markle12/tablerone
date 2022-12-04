@@ -1,12 +1,12 @@
 /// <reference types="better-sqlite3" />
-import { Table, TableRowDefinition, Unique, Filter, TableRow, QueryOptions } from './types';
+import { Table, Filter, TableRow, QueryOptions } from './types';
 import { dbWrapper } from "./dbWrapper";
 export declare class Tabler {
     private wrapper;
     private tableDefinition;
     private fieldKeys;
     private _idField;
-    constructor(wrapper: dbWrapper, def: TableRowDefinition, name: string, uniques?: Array<Unique>);
+    constructor(wrapper: dbWrapper, tableDefinition: Table);
     private operationLog;
     get def(): Table;
     get idField(): string | null;

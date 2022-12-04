@@ -59,6 +59,8 @@ export interface Join {
     localTable?: string;
     foreignTable: string;
     foreignField: string;
+    foreignTableAs?: string;
+    extraConditions?: string[];
 }
 export interface OrderBy {
     field: string;

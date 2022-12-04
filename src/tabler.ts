@@ -85,7 +85,18 @@ export class Tabler {
 		if (options.joins?.length) {
 			options.joins.forEach((join) => {
 				const localTable = join.localTable || this.tableDefinition.name;
-				str += ` LEFT JOIN ${join.foreignTable} ON ${localTable}.${join.localField}=${join.foreignTable}.${join.foreignField}`;
+				str += ` LEFT JOIN ${join.foreignTable}`;
+				const foreignTableAs = join.foreignTableAs || join.foreignTable;
+				if (foreignTableAs != join.foreignTable) {
+					str += ` AS ${foreignTableAs}`;
+				}
+				
+				str += ` ON ${localTable}.${join.localField}=${foreignTableAs}.${join.foreignField}`;
+				if (join.extraConditions) {
+					join.extraConditions.forEach((condition) => {
+						str += ` AND ${condition}`;
+					});
+				}
 			});
 		}
 		let queryArgs : any = {};

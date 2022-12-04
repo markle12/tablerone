@@ -19,6 +19,7 @@ export declare class Tabler {
         };
         logData: {
             duration_without_postprocessing: number;
+            queryString: string;
         };
     } | {
         out: {
@@ -27,6 +28,7 @@ export declare class Tabler {
         };
         logData: {
             duration_without_postprocessing: number;
+            queryString?: undefined;
         };
     };
     query: (fields: Array<string> | string | '*') => {

@@ -140,6 +140,7 @@ export class Tabler {
 		}
 		
 		const fullStr = str.replace('%%FIELDS%%', Array.isArray(options.fields) ? options.fields.join(', ') : options.fields) + limitOffset;
+		console.log(fullStr);
 		const query = this.wrapper.db.prepare(fullStr);
 		let result = query.all(queryArgs);
 		const queryRun = Date.now();
@@ -176,7 +177,7 @@ export class Tabler {
 			const countQuery = this.wrapper.db.prepare(countStr);
 			
 			const count = countQuery.all(queryArgs).length;
-			return {out: {list: result, totalResults: count}, logData: {duration_without_postprocessing: queryRun - start, queryString: fullStr}};
+			return {out: {list: result, totalResults: count}, logData: {duration_without_postprocessing: queryRun - start}};
 		}
 		return {out: { list: result}, logData: {duration_without_postprocessing: queryRun - start}};
 	}

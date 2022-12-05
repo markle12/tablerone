@@ -185,11 +185,10 @@ export class Tabler {
 
 	public query = (fields: Array<string> | string | '*') => {
 		if (fields == '*') {
-			fields = this.fieldKeys.slice(0);
+			fields = this.fieldKeys.slice(0).map(field => `${this.tableDefinition.name}.${field}`);
 		} else if (!Array.isArray(fields)) {
 			fields = [fields];
 		}
-		fields = fields.map(field => `${this.tableDefinition.name}.${field}`);
 		const options : QueryOptions = {fields};
 		return ChainableQuery(options, (options) => {
 			return this.wrapper.tables[this.def.name].select(options);

@@ -119,12 +119,11 @@ class Tabler {
         };
         this.query = (fields) => {
             if (fields == '*') {
-                fields = this.fieldKeys.slice(0);
+                fields = this.fieldKeys.slice(0).map(field => `${this.tableDefinition.name}.${field}`);
             }
             else if (!Array.isArray(fields)) {
                 fields = [fields];
             }
-            fields = fields.map(field => `${this.tableDefinition.name}.${field}`);
             const options = { fields };
             return (0, chainableQuery_1.ChainableQuery)(options, (options) => {
                 return this.wrapper.tables[this.def.name].select(options);

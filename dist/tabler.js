@@ -100,7 +100,7 @@ class Tabler {
                         row[subRowType.name] = [];
                     }
                 });
-                options.fields.forEach((field) => {
+                Object.keys(row).forEach((field) => {
                     var _a, _b;
                     field = field.replace(`${this.tableDefinition.name}.`, '');
                     console.log(field);

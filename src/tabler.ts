@@ -164,7 +164,7 @@ export class Tabler {
 					row[subRowType.name] = [];
 				}
 			})
-			options.fields.forEach((field) => {
+			Object.keys(row).forEach((field) => {
 				field = field.replace(`${this.tableDefinition.name}.`, '');
 				console.log(field)
 				if (this.tableDefinition.fields[field]?.formatter) {

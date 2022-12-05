@@ -166,9 +166,10 @@ export class Tabler {
 			})
 			options.fields.forEach((field) => {
 				field = field.replace(`${this.tableDefinition.name}.`, '');
-				
+				console.log(field)
 				if (this.tableDefinition.fields[field]?.formatter) {
 					row[field] = this.tableDefinition.fields[field].formatter?.out(row[field]);
+					console.log('formatted', row[field]);
 				}
 			})
 			return row;

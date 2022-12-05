@@ -103,8 +103,10 @@ class Tabler {
                 options.fields.forEach((field) => {
                     var _a, _b;
                     field = field.replace(`${this.tableDefinition.name}.`, '');
+                    console.log(field);
                     if ((_a = this.tableDefinition.fields[field]) === null || _a === void 0 ? void 0 : _a.formatter) {
                         row[field] = (_b = this.tableDefinition.fields[field].formatter) === null || _b === void 0 ? void 0 : _b.out(row[field]);
+                        console.log('formatted', row[field]);
                     }
                 });
                 return row;

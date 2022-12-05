@@ -169,7 +169,6 @@ export class Tabler {
 				if (this.tableDefinition.fields[field]?.formatter) {
 					row[field] = this.tableDefinition.fields[field].formatter?.out(row[field]);
 				}
-				console.log(field, row[field]);
 			})
 			return row;
 		})

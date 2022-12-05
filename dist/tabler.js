@@ -104,7 +104,6 @@ class Tabler {
                     if ((_a = this.tableDefinition.fields[field]) === null || _a === void 0 ? void 0 : _a.formatter) {
                         row[field] = (_b = this.tableDefinition.fields[field].formatter) === null || _b === void 0 ? void 0 : _b.out(row[field]);
                     }
-                    console.log(field, row[field]);
                 });
                 return row;
             });

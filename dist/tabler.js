@@ -74,8 +74,6 @@ class Tabler {
                 limitOffset += ` OFFSET ${options.offset}`;
             }
             const fullStr = str.replace('%%FIELDS%%', Array.isArray(options.fields) ? options.fields.join(', ') : options.fields) + limitOffset;
-            console.log(fullStr);
-            console.log(options);
             const query = this.wrapper.db.prepare(fullStr);
             let result = query.all(queryArgs);
             const queryRun = Date.now();
@@ -103,10 +101,8 @@ class Tabler {
                 Object.keys(row).forEach((field) => {
                     var _a, _b;
                     field = field.replace(`${this.tableDefinition.name}.`, '');
-                    console.log(field);
                     if ((_a = this.tableDefinition.fields[field]) === null || _a === void 0 ? void 0 : _a.formatter) {
                         row[field] = (_b = this.tableDefinition.fields[field].formatter) === null || _b === void 0 ? void 0 : _b.out(row[field]);
-                        console.log('formatted', row[field]);
                     }
                 });
                 return row;
